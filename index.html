@@ -1,95 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Habit Tracker - Capstone Project</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-  <!-- ================================================
-       SECTION 1: PAGE HEADER (Team Member 1)
-       ================================================ -->
-  <header>
-    <h1>My Habit Tracker</h1>
-    <p id="todayDate">Loading today's date...</p>
-  </header>
-
-  <main>
-
-    <!-- ================================================
-         SECTION 2: STATS (Team Member 6)
-         ================================================ -->
-    <section class="stats">
-      <div class="stat-box">
-        <h3>Current Streak</h3>
-        <p id="currentStreak">0 days</p>
-      </div>
-      <div class="stat-box">
-        <h3>Longest Streak</h3>
-        <p id="longestStreak">0 days</p>
-      </div>
-      <div class="stat-box">
-        <h3>Today's Progress</h3>
-        <p id="todayPercent">0%</p>
-      </div>
-      <div class="stat-box">
-        <h3>Total Done</h3>
-        <p id="totalDone">0</p>
-      </div>
-    </section>
-
-    <!-- Motivational quote -->
-    <section class="quote-box">
-      <p id="quoteText">Loading...</p>
-    </section>
-
-    <!-- ================================================
-         SECTION 3: ADD HABIT FORM (Team Member 3)
-         ================================================ -->
-    <section class="card">
-      <h2>Add a New Habit</h2>
-      <div class="add-row">
-        <input type="text" id="habitInput" placeholder="e.g. Drink 2L of water" maxlength="30">
-        <button onclick="addHabit()">Add Habit</button>
-      </div>
-
-      <p class="preset-label">Or pick one to start with:</p>
-      <div class="preset-row">
-        <button class="preset-btn" onclick="addPreset('Water intake')">💧 Water intake</button>
-        <button class="preset-btn" onclick="addPreset('Gym')">💪 Gym</button>
-        <button class="preset-btn" onclick="addPreset('Reading')">📚 Reading</button>
-        <button class="preset-btn" onclick="addPreset('Coding practice')">💻 Coding practice</button>
-      </div>
-    </section>
-
-    <!-- ================================================
-         SECTION 4: HABIT LIST (Team Member 3 + 4)
-         ================================================ -->
-    <section class="card">
-      <h2>Today's Habits</h2>
-      <div id="habitList"></div>
-    </section>
-
-    <!-- ================================================
-         SECTION 5: CALENDAR (Team Member 5)
-         ================================================ -->
-    <section class="card">
-      <h2 id="calendarTitle">Calendar</h2>
-      <div class="weekdays">
-        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
-        <span>Thu</span><span>Fri</span><span>Sat</span>
-      </div>
-      <div id="calendarGrid" class="calendar-grid"></div>
-    </section>
-
-  </main>
-
-  <footer>
-    <p>Capstone Project — Built by our team of 6</p>
-  </footer>
-
-  <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>habit_tracker</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
