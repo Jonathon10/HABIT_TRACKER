@@ -1,24 +1,24 @@
-body {
-  background: #eef2f6;
-  font-family: Arial, sans-serif;
-}
-
 .container {
   max-width: 1000px;
-  margin: auto;
+  margin: 0 auto;
   padding: 20px;
 }
 
 h1 {
   text-align: center;
+  font-size: 32px;
+  margin: 10px 0 5px;
+  color: #2c3e50;
 }
 
 .date {
   text-align: center;
   color: gray;
   margin-bottom: 20px;
+  font-size: 14px;
 }
 
+/* ===== Stats ===== */
 .stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -30,36 +30,51 @@ h1 {
   border-radius: 10px;
   padding: 20px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .card h4 {
   color: gray;
-  margin-bottom: 10px;
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 1px;
 }
 
 .card h2 {
   color: #2196f3;
+  font-size: 26px;
+  margin: 0;
 }
 
+/* ===== Quote (inline styles in JSX also back this up) ===== */
 .quote {
-  margin: 20px 0;
   background: #2ea3f2;
   color: white;
   text-align: center;
-  padding: 18px;
+  padding: 20px;
+  margin: 20px 0;
   border-radius: 10px;
   font-style: italic;
+  font-size: 18px;
+  display: block;
 }
 
+/* ===== Sections (cards) ===== */
 .section {
   background: white;
   padding: 20px;
   margin-top: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+.section h2 {
+  font-size: 20px;
+  margin: 0 0 12px;
+  color: #2c3e50;
+}
+
+/* ===== Add habit form ===== */
 .input-row {
   display: flex;
   gap: 10px;
@@ -67,20 +82,61 @@ h1 {
 
 .input-row input {
   flex: 1;
-  padding: 10px;
+  padding: 10px 12px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.input-row input:focus {
+  outline: none;
+  border-color: #2196f3;
+}
+
+.input-row button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.input-row button:hover {
+  background: #2980b9;
+}
+
+.preset-label {
+  margin: 14px 0 8px;
+  color: gray;
+  font-size: 14px;
 }
 
 .quick-buttons {
-  margin-top: 15px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .quick-buttons button {
   background: #f1f1f1;
+  color: #2c3e50;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
 }
 
+.quick-buttons button:hover {
+  background: #dde4e6;
+}
+
+/* ===== Habit rows ===== */
 .habit-row {
   display: flex;
   justify-content: space-between;
@@ -91,25 +147,63 @@ h1 {
   background: #f5f5f5;
 }
 
-.completed {
+.habit-row.completed {
   background: #d7f0de;
+}
+
+.habit-row span {
+  font-size: 15px;
+  font-weight: 500;
 }
 
 .done-btn {
   background: #22c55e;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 8px 14px;
   margin-right: 8px;
   border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.done-btn:hover {
+  background: #16a34a;
 }
 
 .delete-btn {
   background: #ef4444;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 8px 14px;
   border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+.empty {
+  color: gray;
+  text-align: center;
+  padding: 20px;
+  margin: 0;
+}
+
+/* ===== Calendar ===== */
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: gray;
+  margin-bottom: 8px;
 }
 
 .calendar {
@@ -120,9 +214,47 @@ h1 {
 
 .day {
   background: #f3f4f6;
-  height: 80px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+.day.empty {
+  background: transparent;
+}
+
+.day.done {
+  background: #22c55e;
+  color: white;
+  font-weight: bold;
+}
+
+.day.partial {
+  background: #fde68a;
+}
+
+.day.today {
+  border: 2px solid #2196f3;
+}
+
+/* ===== Phones ===== */
+@media (max-width: 700px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .day {
+    height: 45px;
+    font-size: 12px;
+  }
+  .calendar,
+  .weekdays {
+    gap: 5px;
+  }
+  .input-row {
+    flex-direction: column;
+  }
 }
