@@ -1,13 +1,26 @@
+// Habit Tracker Backend
+// Express + CORS
+
 const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const PORT = 5001;
 
 app.use(cors());
 app.use(express.json());
 
-// Temporary in-memory data
+const QUOTES = [
+  "Small steps every day lead to big results!",
+  "Don't break the chain — keep going!",
+  "Discipline beats motivation.",
+  "You are what you repeatedly do.",
+  "Progress, not perfection.",
+  "One day at a time.",
+  "A little bit every day is better than a lot once in a while.",
+  "Believe you can and you're halfway there.",
+  "The secret of getting ahead is getting started.",
+];
+
 let habits = [
   {
     id: 1,
@@ -23,12 +36,10 @@ let habits = [
   },
 ];
 
-// Root route
 app.get("/", (req, res) => {
-  res.send("Backend is running!");
+  res.send("Habit Tracker Backend is running!");
 });
 
-// Health check
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
@@ -36,16 +47,21 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Get all habits
+app.get("/api/quotes", (req, res) => {
+  res.json(QUOTES);
+});
+
+app.get("/api/quote/today", (req, res) => {
+  const day = new Date().getDate();
+  res.json({ quote: QUOTES[day % QUOTES.length] });
+});
+
 app.get("/api/habits", (req, res) => {
   res.json(habits);
 });
 
-// Get one habit by ID
 app.get("/api/habits/:id", (req, res) => {
-  const habit = habits.find(
-    (habit) => habit.id === parseInt(req.params.id)
-  );
+  const habit = habits.find((habit) => habit.id === parseInt(req.params.id));
 
   if (!habit) {
     return res.status(404).json({
@@ -56,7 +72,6 @@ app.get("/api/habits/:id", (req, res) => {
   res.json(habit);
 });
 
-// Create a new habit
 app.post("/api/habits", (req, res) => {
   const newHabit = {
     id: habits.length > 0 ? habits[habits.length - 1].id + 1 : 1,
@@ -70,11 +85,8 @@ app.post("/api/habits", (req, res) => {
   res.status(201).json(newHabit);
 });
 
-// Update a habit
 app.put("/api/habits/:id", (req, res) => {
-  const habit = habits.find(
-    (habit) => habit.id === parseInt(req.params.id)
-  );
+  const habit = habits.find((habit) => habit.id === parseInt(req.params.id));
 
   if (!habit) {
     return res.status(404).json({
@@ -89,7 +101,6 @@ app.put("/api/habits/:id", (req, res) => {
   res.json(habit);
 });
 
-// Delete a habit
 app.delete("/api/habits/:id", (req, res) => {
   const habitIndex = habits.findIndex(
     (habit) => habit.id === parseInt(req.params.id)
@@ -109,10 +120,8 @@ app.delete("/api/habits/:id", (req, res) => {
   });
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+const PORT = 5000;
 
-server.on("error", (error) => {
-  console.error("Server error:", error);
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
