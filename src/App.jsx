@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import SignIn from "./SignIn.jsx";
 
 // 9 motivational quotes — one per day based on the date
 const QUOTES = [
@@ -32,28 +33,57 @@ function isNextDay(d1, d2) {
   return formatDate(d) === d2;
 }
 
+// ===== Top-level App: handles auth gating =====
 export default function App() {
+  // null = signed out, a string (email) = signed in
+  const [user, setUser] = useState(localStorage.getItem("currentUser") || null);
+
+  function handleLogin(email) {
+    setUser(email);
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("currentUser");
+    setUser(null);
+  }
+
+  // If no one is signed in, show the sign-in page
+  if (!user) {
+    return <SignIn onLogin={handleLogin} />;
+  }
+
+  // Otherwise show the tracker
+  return <Tracker user={user} onLogout={handleLogout} />;
+}
+
+// ===== The actual habit tracker (only shown when signed in) =====
+function Tracker({ user, onLogout }) {
   const [habitInput, setHabitInput] = useState("");
   const [habits, setHabits] = useState([]);
   const [completed, setCompleted] = useState({});
 
-  // Load saved data when the page opens
+  // Storage keys are namespaced by the user's email
+  // so different accounts have different habit lists
+  const habitsKey = `habits_${user}`;
+  const completedKey = `completed_${user}`;
+
+  // Load this user's saved data
   useEffect(() => {
-    const h = localStorage.getItem("habits");
-    const c = localStorage.getItem("completed");
-    if (h) setHabits(JSON.parse(h));
-    if (c) setCompleted(JSON.parse(c));
-  }, []);
+    const h = localStorage.getItem(habitsKey);
+    const c = localStorage.getItem(completedKey);
+    setHabits(h ? JSON.parse(h) : []);
+    setCompleted(c ? JSON.parse(c) : {});
+  }, [habitsKey, completedKey]);
 
   // Save whenever habits change
   useEffect(() => {
-    localStorage.setItem("habits", JSON.stringify(habits));
-  }, [habits]);
+    localStorage.setItem(habitsKey, JSON.stringify(habits));
+  }, [habits, habitsKey]);
 
   // Save whenever completed changes
   useEffect(() => {
-    localStorage.setItem("completed", JSON.stringify(completed));
-  }, [completed]);
+    localStorage.setItem(completedKey, JSON.stringify(completed));
+  }, [completed, completedKey]);
 
   // ===== TODAY'S QUOTE =====
   const todayDayNumber = new Date().getDate();
@@ -173,6 +203,16 @@ export default function App() {
 
   return (
     <div className="container">
+      {/* ===== USER BAR (NEW) ===== */}
+      <div className="user-bar">
+        <span className="user-email">
+          Signed in as <strong>{user}</strong>
+        </span>
+        <button className="logout-btn" onClick={onLogout}>
+          Logout
+        </button>
+      </div>
+
       <h1>My Habit Tracker</h1>
       <p className="date">
         {now.toLocaleDateString(undefined, {
@@ -202,7 +242,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* MOTIVATIONAL QUOTE — inline styles GUARANTEE it shows */}
+      {/* MOTIVATIONAL QUOTE — inline styles guarantee it shows */}
       <div
         className="quote"
         style={{
@@ -219,7 +259,7 @@ export default function App() {
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
-        💡 {todayQuote}
+        {todayQuote}
       </div>
 
       <div className="section">
@@ -237,10 +277,10 @@ export default function App() {
         </div>
         <p className="preset-label">Or pick one to start with:</p>
         <div className="quick-buttons">
-          <button onClick={() => addPreset("Water intake")}>💧 Water intake</button>
-          <button onClick={() => addPreset("Gym")}>💪 Gym</button>
-          <button onClick={() => addPreset("Reading")}>📚 Reading</button>
-          <button onClick={() => addPreset("Coding practice")}>💻 Coding practice</button>
+          <button onClick={() => addPreset("Water intake")}>Water intake</button>
+          <button onClick={() => addPreset("Gym")}>Gym</button>
+          <button onClick={() => addPreset("Reading")}>Reading</button>
+          <button onClick={() => addPreset("Coding practice")}>Coding practice</button>
         </div>
       </div>
 
@@ -252,13 +292,22 @@ export default function App() {
           habits.map((name) => {
             const done = doneTodayList.includes(name);
             return (
-              <div key={name} className={`habit-row ${done ? "completed" : ""}`}>
+              <div
+                key={name}
+                className={`habit-row ${done ? "completed" : ""}`}
+              >
                 <span>{name}</span>
                 <div>
-                  <button className="done-btn" onClick={() => toggleHabit(name)}>
+                  <button
+                    className="done-btn"
+                    onClick={() => toggleHabit(name)}
+                  >
                     {done ? "Undo" : "Done"}
                   </button>
-                  <button className="delete-btn" onClick={() => deleteHabit(name)}>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteHabit(name)}
+                  >
                     Delete
                   </button>
                 </div>

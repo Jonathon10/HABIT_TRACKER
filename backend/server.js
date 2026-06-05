@@ -1,5 +1,6 @@
 // Habit Tracker Backend
-// Express + CORS — serves motivational quotes
+// Express + CORS
+// In-memory user store (no database needed for the demo)
 
 const express = require("express");
 const cors = require("cors");
@@ -7,6 +8,49 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// ============================================================
+// In-memory user store — { email: password }
+// Wiped every time you restart the server.
+// For a demo capstone this is fine.
+// Production: replace with a real DB and hash passwords (bcrypt).
+// ============================================================
+const users = {};
+
+// ===== AUTH ROUTES =====
+
+app.post("/api/register", (req, res) => {
+  const { email, password } = req.body || {};
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+  if (password.length < 4) {
+    return res.status(400).json({ error: "Password must be at least 4 characters" });
+  }
+  if (users[email]) {
+    return res.status(409).json({ error: "An account with that email already exists" });
+  }
+  users[email] = password;
+  console.log(`Registered: ${email}  (total users: ${Object.keys(users).length})`);
+  res.json({ success: true, email });
+});
+
+app.post("/api/login", (req, res) => {
+  const { email, password } = req.body || {};
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+  if (!users[email]) {
+    return res.status(401).json({ error: "No account with that email" });
+  }
+  if (users[email] !== password) {
+    return res.status(401).json({ error: "Wrong password" });
+  }
+  console.log(`Signed in: ${email}`);
+  res.json({ success: true, email });
+});
+
+// ===== QUOTE ROUTES =====
 
 const QUOTES = [
   "Small steps every day lead to big results!",
