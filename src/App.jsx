@@ -544,19 +544,36 @@ function Tracker({ user, darkMode, setDarkMode, onLogout }) {
  }
 
  const now = new Date();
- const year = now.getFullYear(), month = now.getMonth(), todayDay = now.getDate();
+
+ const year = now.getFullYear(), 
+       month = now.getMonth(), 
+       todayDay = now.getDate();
+
  const firstDay = new Date(year, month, 1).getDay();
  const lastDate = new Date(year, month + 1, 0).getDate();
+
  const cells = [];
+
  for (let i = 0; i < firstDay; i++) cells.push({ empty: true });
+
  for (let day = 1; day <= lastDate; day++) {
- const k = formatDate(new Date(year, month, day));
- const doneCount = (completed[k] || []).length;
- let status = "none";
- if (habits.length > 0 && doneCount === habits.length) status = "done";
- else if (doneCount > 0) status = "partial";
- cells.push({ day, status, isToday: day === todayDay });
- }
+    const k = formatDate(new Date(year, month, day));
+    const doneCount = (completed[k] || []).length;
+
+    let status = "none";
+
+    if (habits.length > 0 && doneCount === habits.length) 
+      status = "done";
+
+    else if (doneCount > 0) 
+      status = "partial";
+    
+    cells.push({ 
+      day, 
+      status, 
+      isToday: day === todayDay 
+  });
+
 
  const visiblePresets = showAllPresets ? PRESETS : PRESETS.slice(0, 6);
  const marqueeText = QUOTES.join(" ✦ ");
